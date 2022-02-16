@@ -10,8 +10,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "predeploy": "yarn remove sharp && yarn add --platform=linux --arch=x64 --target=8.10.0 sharp",
+    "predeploy": "npm uninstall sharp && npm install --platform=linux --arch=x64 sharp",
     "deploy": "serverless deploy --verbose",
-    "postdeploy": "yarn remove sharp && yarn add sharp"
+    "postdeploy": "npm uninstall sharp && npm install sharp"
   }
 }

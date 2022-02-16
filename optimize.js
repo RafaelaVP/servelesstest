@@ -8,12 +8,11 @@ const S3 = new AWS.S3();
 
 module.exports.handle = async ({ Records: records }, context) => {
   try {
-    await Promise.all(
-      records.map(async record => {
+     for(const record of records){
         const { key } = record.s3.object;
-
+        const bucketName = record.s3.bucket.name
         const image = await S3.getObject({
-          Bucket: process.env.bucket,
+          Bucket: bucketName,
           Key: key
         }).promise();
 
@@ -24,18 +23,14 @@ module.exports.handle = async ({ Records: records }, context) => {
 
         await S3.putObject({
           Body: optimized,
-          Bucket: process.env.bucket,
+          Bucket: bucketName,
           ContentType: "image/jpeg",
           Key: `compressed/${basename(key, extname(key))}.jpg`
         }).promise();
-      })
-    );
-
-    return {
-      statusCode: 201,
-      body: { ok: true }
-    };
-  } catch (err) {
+     }return true
+  }
+   catch (err) {
+     console.log(err)
     return err;
   }
 };
